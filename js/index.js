@@ -97,39 +97,39 @@ var infoWindow = new google.maps.InfoWindow();
         }
         map.setCenter(latlngbounds.getCenter());
         map.fitBounds(latlngbounds);
- 
-        //***********ROUTING****************//
- 
-        //Initialize the Path Array
-        var path = new google.maps.MVCArray();
- 
-        //Initialize the Direction Service
-        var service = new google.maps.DirectionsService();
- 
-        //Set the Path Stroke Color
-        var poly = new google.maps.Polyline({ map: map, strokeColor: '#4986E7' });
- 
-        //Loop and Draw Path Route between the Points on MAP
-        for (var i = 0; i < lat_lng.length; i++) {
-            if ((i + 1) < lat_lng.length) {
-                var src = lat_lng[i];
-                var des = lat_lng[i + 1];
-                path.push(src);
-                poly.setPath(path);
-                service.route({
-                    origin: src,
-                    destination: des,
-                    travelMode: google.maps.DirectionsTravelMode.DRIVING
-                }, function (result, status) {
-                    if (status == google.maps.DirectionsStatus.OK) {
-                        for (var i = 0, len = result.routes[0].overview_path.length; i < len; i++) {
-                            path.push(result.routes[0].overview_path[i]);
-                        }
-                    }
-                });
-            }
-        }
-
+		var mainngate = new google.maps.LatLng(markers[0].lat, markers[0].lng);
+		var valecherygatte = new google.maps.LatLng(markers[1].lat, markers[1].lng);
+		var jaamunabustop = new google.maps.LatLng(markers[2].lat, markers[2].lng);
+		var point1 = new google.maps.LatLng(12.995434,80.235431);
+		
+		var directionsService = new google.maps.DirectionsService;
+  var directionsDisplay = new google.maps.DirectionsRenderer;
+		var waypts = [];
+		waypts.push({
+        location: point1,
+        stopover: false
+      });
+		waypts.push({
+        location: valecherygatte,
+        stopover: true
+      });
+		
+        directionsDisplay.setMap(map);
+		directionsService.route({
+    origin:mainngate ,
+    destination:jaamunabustop ,
+	waypoints: waypts,
+    optimizeWaypoints: true,
+    travelMode: google.maps.TravelMode.DRIVING
+  }, function(response, status) {
+    if (status === google.maps.DirectionsStatus.OK) {
+      directionsDisplay.setDirections(response);
+    } else {
+      window.alert('Directions request failed due to ' + status);
+    }
+  });
+		
+		
 
     
     google.maps.event.addListener(map, 'dragend', function() {
